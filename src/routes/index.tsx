@@ -64,7 +64,7 @@ function Index() {
                   {c.views}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
