@@ -36,7 +36,12 @@ function Index() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar pl-gutter-mobile md:pl-0 mx-auto max-w-container-max">
           {cards.map((c) => (
-            <div key={c.name} className="min-w-[240px] w-[240px] h-[400px] rounded-xl overflow-hidden relative snap-center group flex-shrink-0 border border-outline-variant/30 hover:border-primary-container transition-colors duration-300">
+            <Link
+              key={c.name}
+              to="/player/$playerId"
+              params={{ playerId: c.name.toLowerCase().replace(/\s+/g, "-") }}
+              className="min-w-[240px] w-[240px] h-[400px] rounded-xl overflow-hidden relative snap-center group flex-shrink-0 border border-outline-variant/30 hover:border-primary-container transition-colors duration-300 block"
+            >
               <img src={c.img} alt={c.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
