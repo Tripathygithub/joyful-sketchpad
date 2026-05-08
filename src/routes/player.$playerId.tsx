@@ -547,59 +547,9 @@ function PlayerProfile() {
                 </div>
               </Card>
 
-              {/* Center avatar */}
+              {/* Center avatar - 3D */}
               <Card className="lg:col-span-6 flex flex-col items-center" padding="p-6">
-                <div className="relative w-full h-[480px] bg-gradient-to-b from-[#0C1420] to-[#060A0F] rounded-xl overflow-hidden border border-[#1A2E42] grid place-items-center">
-                  {/* faux 3D player silhouette */}
-                  <svg viewBox="0 0 200 380" className="h-full">
-                    <defs>
-                      <radialGradient id="floorGlow" cx="50%" cy="50%">
-                        <stop offset="0%" stopColor="rgba(0,230,118,0.4)" />
-                        <stop offset="100%" stopColor="rgba(0,230,118,0)" />
-                      </radialGradient>
-                    </defs>
-                    <ellipse cx={100} cy={355} rx={70} ry={14} fill="url(#floorGlow)" />
-                    {/* head */}
-                    <circle cx={100} cy={50} r={22} fill="#D4956A" />
-                    {/* jersey body */}
-                    <path d="M55 90 L145 90 L155 200 L130 215 L130 290 L70 290 L70 215 L45 200 Z" fill="#C8102E" />
-                    <text x={100} y={170} textAnchor="middle" fill="#fff" fontFamily="Bebas Neue" fontSize={36}>9</text>
-                    {/* shorts */}
-                    <path d="M70 290 L130 290 L135 340 L65 340 Z" fill="#0C1420" />
-                    {/* legs */}
-                    <rect x={75} y={340} width={18} height={20} fill="#D4956A" />
-                    <rect x={107} y={340} width={18} height={20} fill="#D4956A" />
-                    {/* arms */}
-                    <path d="M55 95 L25 200 L40 210 L70 110 Z" fill="#C8102E" />
-                    <path d="M145 95 L175 200 L160 210 L130 110 Z" fill="#C8102E" />
-                    {/* measurement lines */}
-                    <line x1={20} y1={30} x2={20} y2={355} stroke="#00E676" strokeWidth={1.5} strokeDasharray="3 3" />
-                    <line x1={15} y1={30} x2={25} y2={30} stroke="#00E676" />
-                    <line x1={15} y1={355} x2={25} y2={355} stroke="#00E676" />
-                    <text x={5} y={195} fill="#00E676" fontFamily="JetBrains Mono" fontSize={10} transform="rotate(-90 5 195)">180 cm</text>
-                    <line x1={20} y1={100} x2={180} y2={100} stroke="#3DB8FF" strokeWidth={1.5} strokeDasharray="3 3" />
-                    <text x={100} y={92} textAnchor="middle" fill="#3DB8FF" fontFamily="JetBrains Mono" fontSize={10}>Wingspan 182 cm</text>
-                  </svg>
-                  <div className="absolute top-4 right-4 text-right">
-                    <div className="text-[10px] tracking-widest text-[#7A9BB5] font-[Barlow_Condensed]">HEADING</div>
-                    <div className="text-[#FFD700]">★★★★☆</div>
-                  </div>
-                  <div className="absolute bottom-4 left-4 text-[10px] tracking-widest text-[#7A9BB5] font-[Barlow_Condensed]">
-                    BUILD: ATHLETIC<br />DOMINANT FOOT: RIGHT
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                  {["↩ Reset", "▶ Idle", "🏃 Sprint", "⚽ Kick", "↕ Jump", "360° AUTO"].map((b, i) => (
-                    <button
-                      key={b}
-                      className={`px-3 py-1.5 text-xs font-[Barlow_Condensed] tracking-wider rounded-md border ${
-                        i === 1 ? "bg-[#00E676] text-[#060A0F] border-[#00E676]" : "border-[#1A2E42] text-[#7A9BB5] hover:text-white hover:border-[#3D5468]"
-                      }`}
-                    >
-                      {b}
-                    </button>
-                  ))}
-                </div>
+                <Avatar3D />
               </Card>
 
               {/* Right metrics */}
