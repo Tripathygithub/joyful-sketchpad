@@ -7,6 +7,7 @@ import {
   StatBar,
   GradeBadge,
 } from "@/components/player/PitchAndCharts";
+import Avatar3D from "@/components/player/Avatar3D";
 
 export const Route = createFileRoute("/player/$playerId")({
   head: () => ({
