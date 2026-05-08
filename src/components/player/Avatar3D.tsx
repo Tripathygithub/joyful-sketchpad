@@ -74,29 +74,6 @@ function applyKit(scene: THREE.Object3D) {
   });
 }
 
-// Overlay meshes that paint the kit on top of the Xbot rig.
-// Xbot is ~1.8m tall and stands on the ground (feet at y=0).
-function KitOverlay() {
-  return (
-    <group>
-      {/* Shorts — white block around hips/upper thighs */}
-      <mesh position={[0, 0.85, 0]} castShadow>
-        <boxGeometry args={[0.46, 0.3, 0.32]} />
-        <meshStandardMaterial color="#F5F5F5" roughness={0.7} />
-      </mesh>
-      {/* Boots — black caps over each foot */}
-      <mesh position={[-0.11, 0.045, 0.05]} castShadow>
-        <boxGeometry args={[0.14, 0.09, 0.28]} />
-        <meshStandardMaterial color="#0E0E10" roughness={0.35} metalness={0.25} />
-      </mesh>
-      <mesh position={[0.11, 0.045, 0.05]} castShadow>
-        <boxGeometry args={[0.14, 0.09, 0.28]} />
-        <meshStandardMaterial color="#0E0E10" roughness={0.35} metalness={0.25} />
-      </mesh>
-    </group>
-  );
-}
-
 function Player({ anim }: { anim: AnimName }) {
   const group = useRef<THREE.Group>(null!);
   const { scene, animations } = useGLTF(MODEL_URL) as any;
