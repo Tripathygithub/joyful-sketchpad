@@ -11,40 +11,94 @@ import * as THREE from "three";
 
 type AnimName = "idle" | "walk" | "run" | "auto";
 
-const MODEL_URL = "https://threejs.org/examples/models/gltf/Soldier.glb";
+// Xbot — slim, athletic humanoid (younger, leaner build than Soldier)
+const MODEL_URL = "https://threejs.org/examples/models/gltf/Xbot.glb";
 useGLTF.preload(MODEL_URL);
+
+// Re-skin the Xbot meshes into a football kit:
+//   Shirt  → red    (torso / arms above elbow area uses BODY mesh)
+//   Shorts → white
+//   Boots  → black
+//   Skin   → warm tan
+function applyKit(scene: THREE.Object3D) {
+  scene.traverse((o: any) => {
+    if (!o.isMesh && !o.isSkinnedMesh) return;
+    o.castShadow = true;
+    o.receiveShadow = true;
+
+    const name: string = (o.name || "").toLowerCase();
+    let color = "#E8B89A"; // skin tone (default)
+    let roughness = 0.75;
+    let metalness = 0.05;
+
+    if (name.includes("shirt") || name.includes("torso") || name.includes("body")) {
+      // Jersey — bright red kit
+      color = "#E63946";
+      roughness = 0.65;
+    }
+    if (name.includes("short") || name.includes("pant") || name.includes("leg") && !name.includes("lower")) {
+      // Shorts — white
+      color = "#F5F5F5";
+      roughness = 0.7;
+    }
+    if (name.includes("shoe") || name.includes("boot") || name.includes("foot")) {
+      // Boots — black with sheen
+      color = "#0E0E10";
+      roughness = 0.35;
+      metalness = 0.2;
+    }
+    if (name.includes("head") || name.includes("face") || name.includes("hair")) {
+      color = name.includes("hair") ? "#2A1810" : "#E8B89A";
+      roughness = 0.85;
+    }
+
+    // Xbot uses a single "Beta_Surface" material on the body and "Beta_Joints"
+    // on the joints. Detect by material name as fallback.
+    const matName = (o.material?.name || "").toLowerCase();
+    if (matName.includes("joint")) {
+      color = "#0E0E10"; // boots / accents
+      roughness = 0.4;
+    } else if (matName.includes("surface") || matName.includes("beta")) {
+      // The whole body shares one material — split into a kit by cloning per region
+      // Since we can't easily split, give it the jersey red as the dominant color.
+      color = "#E63946";
+    }
+
+    if (o.material) {
+      o.material = o.material.clone();
+      o.material.color = new THREE.Color(color);
+      o.material.roughness = roughness;
+      o.material.metalness = metalness;
+      o.material.needsUpdate = true;
+    }
+  });
+}
 
 function Player({ anim }: { anim: AnimName }) {
   const group = useRef<THREE.Group>(null!);
   const { scene, animations } = useGLTF(MODEL_URL) as any;
   const { actions, names } = useAnimations(animations, group);
 
-  // Enable shadows on every mesh
+  // Apply kit colors
   useEffect(() => {
-    scene.traverse((o: any) => {
-      if (o.isMesh) {
-        o.castShadow = true;
-        o.receiveShadow = true;
-        // Slight material polish
-        if (o.material) {
-          o.material.roughness = 0.7;
-          o.material.metalness = 0.05;
-        }
-      }
-    });
+    applyKit(scene);
   }, [scene]);
 
-  // Pick which clip to play. Soldier.glb ships with: "Idle", "Walk", "Run", "TPose", "Death"
+  // Xbot animations: "idle", "walk", "run", "dance", "death", "no", "sitting",
+  // "standing", "yes", "wave", "punch", "ThumbsUp"
   useEffect(() => {
     if (!actions || names.length === 0) return;
-    // Stop everything first
     Object.values(actions).forEach((a: any) => a?.fadeOut(0.25));
 
+    const pick = (...candidates: string[]) =>
+      candidates.find((c) => names.some((n) => n.toLowerCase() === c.toLowerCase())) ||
+      names[0];
+
     const map: Record<AnimName, string> = {
-      idle: "Idle",
-      walk: "Walk",
-      run: "Run",
-      auto: "Idle",
+      idle: pick("idle"),
+      walk: pick("walk", "walking"),
+      run: pick("run", "running"),
+      auto: pick("idle"),
     };
     const target = map[anim];
     const action = actions[target] || actions[names[0]];
